@@ -1,46 +1,38 @@
 const http = require("http");
-const users = require("./users");
+const { hello, greetings } = require("./helloWorld");
 const moment = require("moment");
+const express = require("express");
+const app = express();
 
-const server = http.createServer((req, res) => {
-  const url = req.url;
+app.get("/", (req, res) => res.send("Hello World"));
+app.get("/about", (req, res) =>
+  res.status(200).json({
+    status: "success",
+    message: "about page",
+    data: [],
+  })
+);
 
-  if (url === "/") {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "text/plain");
-    res.write("This is the home page");
-  } else if (url === "/about") {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.write(
-      JSON.stringify({
-        status: "success",
-        message: "response success",
-        description: "Exercise #02",
-        date: moment().format("YYYY-MM-DDTHH:mm:ssZ"),
-      })
-    );
-  } else if (url === "/users") {
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.write(JSON.stringify(users));
-  } else {
-    res.statusCode = 404;
-    res.setHeader("Content-Type", "application/json");
-    res.write(
-      JSON.stringify({
-        status: "not found",
-        message: "Route tidak ditemukan",
-        date: moment().format("YYYY-MM-DDTHH:mm:ssZ"),
-      })
-    );
-  }
+//method http
+app.post("/contoh", (req, res) => res.send("request method POST"));
+app.put("/contoh", (req, res) => res.send("request method PUT"));
+app.delete("/contoh", (req, res) => res.send("request method DELETE"));
+app.patch("/contoh", (req, res) => res.send("request method PATCH"));
+app.all("/universal", (req, res) =>
+  res.send(`request dengan method ${req.method}`)
+);
 
-  res.end();
+//routing dinamis menggunakna params
+app.get("/post/:id", (req, res) => res.send(`Artikel ke - $ {req.params.id}`));
+
+// 2. Menggunakan query string
+app.get("/post", (req, res) => {
+  const { page, sort } = req.query;
+  res.send(`Query yang didapatkan adalah : ${page}, sort : ${sort}`);
 });
 
 const hostname = "127.0.0.1";
 const port = 3000;
-server.listen(port, hostname, () =>
+app.listen(port, hostname, () =>
   console.log(`Server running at http://${hostname}:${port}`)
 );
