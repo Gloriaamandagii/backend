@@ -14,7 +14,7 @@ app.use(morgan("tiny"));
 // app.use(errorhandler);
 
 app.use(express.urlencoded({ extended: true }));
-
+app.use(express.json());
 //Routing
 app.use(routers);
 
