@@ -6,6 +6,7 @@ const morgan = require("morgan");
 const errorhandler = require("errorhandler");
 const app = express();
 const routers = require("./routers");
+const path = require("path");
 
 //Middleware
 const log = (req, res, next) => {};
@@ -17,7 +18,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 //Routing
 app.use(routers);
-
+app.use(express.static(path.join(__dirname, "public")));
 //Middleware untuk 404
 app.use((req, res, next) => {
   res.status(404).json({
