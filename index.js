@@ -7,6 +7,7 @@ const errorhandler = require("errorhandler");
 const app = express();
 const routers = require("./routers");
 const path = require("path");
+const cors = require("cors");
 
 //Middleware
 const log = (req, res, next) => {};
@@ -15,7 +16,12 @@ app.use(morgan("tiny"));
 // app.use(errorhandler);
 
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(
+  cors({
+    origin: "http://127.0.0.1:5500",
+  })
+);
+
 //Routing
 app.use(routers);
 app.use(express.static(path.join(__dirname, "public")));
